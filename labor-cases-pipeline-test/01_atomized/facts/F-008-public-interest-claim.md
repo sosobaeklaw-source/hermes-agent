@@ -4,7 +4,7 @@ type: fact
 instance: admin
 source: 2022구합61595
 tags: [원고주장, 공익제보, 카카오톡, 직보지시]
-related: [[F-013-B-kinship]], [[R-002-fact-misperception]]
+related: [[F-013-b-kinship]], [[R-002-fact-misperception]]
 confidence: medium
 ---
 

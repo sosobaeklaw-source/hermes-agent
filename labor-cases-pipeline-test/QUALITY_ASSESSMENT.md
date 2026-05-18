@@ -53,7 +53,7 @@ RESULT: PASS — all structural checks green
 | **Rule Application** | `01_atomized/reasoning/` 9개 + `02_issue_matrix.md` | **4.5** | 1·2심 reasoning을 추상 룰에 정확 매핑. **결손**: 매트릭스 50% (6/12 cells)만 직접 cover. 2심의 in-by-reference 인용 셀이 명시 atom으로 분리 안 됨. |
 | **Rule Conclusion** | `01_atomized/outcomes/` 3개 + tp-013 추정 판시사항 | **4.0** | 1·2심 주문 정확. 대법원 결론은 자료 부재로 `confidence: low` 처리 (적절한 절제). tp-013 추정 판시사항은 합리적 추론. |
 | **Interpretation** | `03_doctrine_evolution.md` 5단 사다리 + `R-009-divergence-summary` | **4.7** | 추상도 점프를 정량적으로 모델링. 부정설·긍정설을 4축 표로 분해. **결손**: 비교법적 시각(독일·미국 사례) 부재. |
-| **Rhetorical Understanding** | `R-005-stage-distinction-high`, `R-008-supreme-issue-framing` | **4.6** | 2심의 시점 특정과 대법원의 쟁점 표현 5요소 분해는 수사학·법문 정밀 독해의 모범. |
+| **Rhetorical Understanding** | `R-005-stage-distinction-high`, `R-008-issue-framing-supreme` | **4.6** | 2심의 시점 특정과 대법원의 쟁점 표현 5요소 분해는 수사학·법문 정밀 독해의 모범. |
 | **전체** | — | **4.55 / 5.0 = 91.0%** | LegalBench 평균 GPT-4 0.694 (2023) 대비 인간 변호사 0.825 수준에 근접한 자가 채점값 |
 
 **LegalBench 자가 채점 종합**: **91.0점 / 100점**

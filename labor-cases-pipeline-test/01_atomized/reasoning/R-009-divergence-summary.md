@@ -4,7 +4,7 @@ type: reasoning
 instance: all
 source: meta (3개 심급 비교)
 tags: [심급비교, 해석차이, 핵심분석]
-related: [[R-001-procedural-defect-admin]], [[R-004-rule-reasonableness-high]], [[R-005-stage-distinction-high]], [[R-008-supreme-issue-framing]]
+related: [[R-001-procedural-defect-admin]], [[R-004-rule-reasonableness-high]], [[R-005-stage-distinction-high]], [[R-008-issue-framing-supreme]]
 confidence: high
 priority: ★★★★★
 ---

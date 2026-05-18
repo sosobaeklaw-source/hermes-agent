@@ -4,7 +4,7 @@ type: reasoning
 instance: high
 source: 2023누53227
 tags: [정정, 사실인정, 오기]
-related: [[F-005-A-misconduct-ceo-email]], [[F-007-B-misconduct-instigation]]
+related: [[F-005-a-misconduct-ceo-email]], [[F-007-b-misconduct-instigation]]
 confidence: high
 ---
 
@@ -23,5 +23,5 @@ confidence: high
 ## 이 atom의 의미
 
 오기 정정은 단순한 행정사항으로 보이지만, **사실관계의 정확한 시점이 쟁점 판단에 영향**을 줄
-수 있다. 특히 [[F-007-B-misconduct-instigation]]의 시점이 2020. 4. → 2019. 4.로 1년 앞당겨질 경우,
+수 있다. 특히 [[F-007-b-misconduct-instigation]]의 시점이 2020. 4. → 2019. 4.로 1년 앞당겨질 경우,
 원고들이 주장하는 "직보 지시" 시기와의 정합성 평가가 미세하게 달라질 수 있음.

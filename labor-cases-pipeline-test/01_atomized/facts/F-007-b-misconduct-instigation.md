@@ -1,10 +1,10 @@
 ---
-id: F-007-B-misconduct-instigation
+id: F-007-b-misconduct-instigation
 type: fact
 instance: admin
 source: 2022구합61595
 tags: [비위행위, 사주, 사장이메일, PC저장]
-related: [[P-004-plaintiff-B]], [[F-004-A-misconduct-server-access]], [[F-005-A-misconduct-ceo-email]]
+related: [[P-004-plaintiff-b]], [[F-004-a-misconduct-server-access]], [[F-005-a-misconduct-ceo-email]]
 confidence: high
 ---
 

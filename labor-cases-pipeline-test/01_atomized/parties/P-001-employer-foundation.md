@@ -4,7 +4,7 @@ type: party
 instance: all
 source: 2022구합61595
 tags: [당사자, 학교법인, 사용자]
-related: [[P-002-employer-subsidiary]], [[P-003-plaintiff-A]], [[P-004-plaintiff-B]]
+related: [[P-002-employer-subsidiary]], [[P-003-plaintiff-a]], [[P-004-plaintiff-b]]
 confidence: high
 ---
 

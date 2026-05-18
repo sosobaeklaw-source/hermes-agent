@@ -4,7 +4,7 @@ type: outcome
 instance: supreme
 source: 2024두64888 (자료엔 사안 개요·쟁점만)
 tags: [주문, 대법원, 결론미확정]
-related: [[PR-008-supreme-court]], [[R-008-supreme-issue-framing]], [[I-001-lawyer-accompaniment]]
+related: [[PR-008-supreme-court]], [[R-008-issue-framing-supreme]], [[I-001-lawyer-accompaniment]]
 confidence: low  # 자료에 결론 부재
 ---
 
@@ -21,7 +21,7 @@ confidence: low  # 자료에 결론 부재
 
 ## 본 파이프라인의 처리 방침
 
-- "대법원이 어떻게 판결할 것 같은가"는 [[D-005-lawyer-counsel-right]], [[R-008-supreme-issue-framing]]
+- "대법원이 어떻게 판결할 것 같은가"는 [[D-005-lawyer-counsel-right]], [[R-008-issue-framing-supreme]]
   에서 양설(긍정설·부정설)을 모두 모델링.
 - 마케팅 파이프라인(03)에서도 결론을 단정하지 않고 **"대법원이 정면으로 다툰 첫 사안"** 이라는
   메시지로 활용.

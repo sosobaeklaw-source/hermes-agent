@@ -1,5 +1,5 @@
 ---
-id: F-010-A-attendance-waiver
+id: F-010-a-attendance-waiver
 type: fact
 instance: admin
 source: 2022구합61595

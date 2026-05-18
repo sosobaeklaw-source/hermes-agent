@@ -4,7 +4,7 @@ type: procedure
 instance: admin
 source: 2022구합61595
 tags: [징계위원회, 출석통지, 인사위원회]
-related: [[F-010-A-attendance-waiver]], [[F-011-B-statement-admission]], [[R-001-procedural-defect-admin]]
+related: [[F-010-a-attendance-waiver]], [[F-011-b-statement-admission]], [[R-001-procedural-defect-admin]]
 confidence: high
 ---
 

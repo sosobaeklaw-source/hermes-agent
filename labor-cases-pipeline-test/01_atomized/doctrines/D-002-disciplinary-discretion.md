@@ -4,7 +4,7 @@ type: doctrine
 instance: admin+high
 source: 대법원 2016. 5. 12. 선고 2014두922 판결 등
 tags: [법리, 징계재량권, 일탈남용]
-related: [[I-003-disciplinary-discretion]], [[D-003-employment-incompatibility]]
+related: [[I-003-disciplinary-discretion]], [[D-003-employment-incompatibility]], [[CIT-001-supreme-2014du922]], [[L-001-labor-standards-act-23]]
 confidence: high
 ---
 

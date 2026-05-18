@@ -1,10 +1,10 @@
 ---
-id: P-003-plaintiff-A
+id: P-003-plaintiff-a
 type: party
 instance: all
 source: 2022구합61595
 tags: [당사자, 원고, 전산담당, 과장]
-related: [[P-004-plaintiff-B]], [[F-004-A-misconduct-server-access]]
+related: [[P-004-plaintiff-b]], [[F-004-a-misconduct-server-access]]
 confidence: high
 ---
 

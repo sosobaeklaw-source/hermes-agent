@@ -1,10 +1,10 @@
 ---
-id: F-006-A-misconduct-record-tampering
+id: F-006-a-misconduct-record-tampering
 type: fact
 instance: admin
 source: 2022구합61595
 tags: [비위행위, 통합정보시스템, 재직증명서, 인사기록조작]
-related: [[P-003-plaintiff-A]]
+related: [[P-003-plaintiff-a]]
 confidence: high
 ---
 

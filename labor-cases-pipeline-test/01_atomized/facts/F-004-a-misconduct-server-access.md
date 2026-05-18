@@ -1,10 +1,10 @@
 ---
-id: F-004-A-misconduct-server-access
+id: F-004-a-misconduct-server-access
 type: fact
 instance: admin
 source: 2022구합61595
 tags: [비위행위, 무단접근, 전자결재, 이메일열람]
-related: [[P-003-plaintiff-A]], [[F-007-B-misconduct-instigation]]
+related: [[P-003-plaintiff-a]], [[F-007-b-misconduct-instigation]]
 confidence: high
 ---
 

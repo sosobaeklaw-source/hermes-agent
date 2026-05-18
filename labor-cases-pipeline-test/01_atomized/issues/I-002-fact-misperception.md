@@ -4,7 +4,7 @@ type: issue
 instance: admin+high
 source: 2022구합61595, 2023누53227
 tags: [쟁점, 사실오인, 공익제보, 직보지시]
-related: [[F-008-public-interest-claim]], [[F-013-B-kinship]], [[R-002-fact-misperception]]
+related: [[F-008-public-interest-claim]], [[F-013-b-kinship]], [[R-002-fact-misperception]], [[R-010-issue2-affirmation-high]]
 confidence: high
 priority: ★★★
 ---
@@ -24,3 +24,9 @@ priority: ★★★
 
 [[R-002-fact-misperception]] 참조 — 직보 지시·공익 목적 입증이 부족하고, 설령 J이 묵인했더라도
 J의 개인적 동조에 불과해 법인과의 관계에서 징계사유 해당성을 부정하지 못함.
+
+## 심급별 커버리지
+
+- admin: ● [[R-002-fact-misperception]]
+- high:  ● [[R-010-issue2-affirmation-high]] (1심 인용 + 증거 보강)
+- supreme: ◌ NOT-COVERED — 대법원 사안개요에 본 쟁점이 정식 쟁점으로 포함되지 않음 (자료 한계 아닌 정당한 미커버)

@@ -4,7 +4,7 @@ type: doctrine
 instance: admin
 source: 2022구합61595 (양정 판단 근거)
 tags: [법리, 비밀유지의무, 전산담당자, 비난가능성]
-related: [[R-003-disciplinary-discretion]], [[F-004-A-misconduct-server-access]]
+related: [[R-003-disciplinary-discretion]], [[F-004-a-misconduct-server-access]]
 confidence: high
 ---
 

@@ -1,5 +1,5 @@
 ---
-id: F-011-B-statement-admission
+id: F-011-b-statement-admission
 type: fact
 instance: admin
 source: 2022구합61595

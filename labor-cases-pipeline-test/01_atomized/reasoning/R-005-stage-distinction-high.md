@@ -4,7 +4,7 @@ type: reasoning
 instance: high
 source: 2023누53227
 tags: [단계구분, 시점특정, 묵비권고지, 2심정정]
-related: [[I-001-lawyer-accompaniment]], [[PR-001-audit-interview]], [[R-001-procedural-defect-admin]], [[F-009-lawyer-accompaniment-request]]
+related: [[I-001-lawyer-accompaniment]], [[PR-001-audit-interview]], [[R-001-procedural-defect-admin]], [[F-009-lawyer-accompaniment-request]], [[A-002-audit-officer-hong]]
 confidence: high
 priority: ★★★★★
 ---

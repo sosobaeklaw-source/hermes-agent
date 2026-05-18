@@ -15,8 +15,8 @@ confidence: high
 1. **소명 기회 보장 확인**
    - 감사반이 임의문답 실시 [[PR-001-audit-interview]]
    - 회사가 원고들에게 징계위원회 출석 통지 [[PR-002-disciplinary-committee]]
-   - 원고 A는 진술포기서 제출 [[F-010-A-attendance-waiver]]
-   - 원고 B는 자백 취지 진술 [[F-011-B-statement-admission]]
+   - 원고 A는 진술포기서 제출 [[F-010-a-attendance-waiver]]
+   - 원고 B는 자백 취지 진술 [[F-011-b-statement-admission]]
    - → "소명의 기회를 충분히 가졌다"
 
 2. **변호사 조력 의무 여부 — 문언적 접근**

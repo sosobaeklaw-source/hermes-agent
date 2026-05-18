@@ -4,7 +4,7 @@ type: reasoning
 instance: admin (2심도 인용)
 source: 2022구합61595
 tags: [사실오인, 공익제보, 직보지시, 부정]
-related: [[I-002-fact-misperception]], [[F-008-public-interest-claim]], [[F-013-B-kinship]], [[R-006-typo-correction-high]]
+related: [[I-002-fact-misperception]], [[F-008-public-interest-claim]], [[F-013-b-kinship]], [[R-006-typo-correction-high]]
 confidence: high
 ---
 

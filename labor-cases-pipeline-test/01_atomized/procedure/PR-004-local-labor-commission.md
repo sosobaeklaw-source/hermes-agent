@@ -4,7 +4,7 @@ type: procedure
 instance: admin
 source: 2022구합61595
 tags: [서울지노위, 구제신청, 기각]
-related: [[PR-005-central-labor-commission]], [[PR-003-dismissal-notice]]
+related: [[PR-005-central-labor-commission]], [[PR-003-dismissal-notice]], [[L-002-labor-standards-act-28]]
 confidence: high
 ---
 

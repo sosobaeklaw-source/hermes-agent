@@ -16,7 +16,7 @@
 | **방어막 강도** | 약(소극적 부정) | 강(적극적 정당화) | (검토 단계) |
 | **인정/배척** | 절차하자 X | 절차하자 X | 결론 미공개 |
 | **법리 근거** | [[D-001]] (인사규정 §46, 정관 §63의3, §64①) | [[D-001]] + 방어권 종합 | [[D-005]] (헌법 §12④ 사인 간 효력) |
-| **주요 atom** | [[R-001-procedural-defect-admin]] | [[R-004-rule-reasonableness-high]] + [[R-005-stage-distinction-high]] | [[R-008-supreme-issue-framing]] |
+| **주요 atom** | [[R-001-procedural-defect-admin]] | [[R-004-rule-reasonableness-high]] + [[R-005-stage-distinction-high]] | [[R-008-issue-framing-supreme]] |
 
 ### 쟁점 2 [[I-002-fact-misperception]] — 사실오인(공익제보 항변)
 

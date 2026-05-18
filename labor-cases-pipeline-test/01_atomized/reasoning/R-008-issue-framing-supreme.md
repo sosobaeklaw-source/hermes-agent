@@ -1,5 +1,5 @@
 ---
-id: R-008-supreme-issue-framing
+id: R-008-issue-framing-supreme
 type: reasoning
 instance: supreme
 source: 2024두64888

@@ -4,7 +4,7 @@ type: doctrine
 instance: supreme (쟁점화)
 source: 헌법 제12조 제4항, 2024두64888 (쟁점)
 tags: [법리, 변호인조력권, 헌법, 사인간효력, 수평효]
-related: [[I-001-lawyer-accompaniment]], [[D-001-disciplinary-procedure-rule]]
+related: [[I-001-lawyer-accompaniment]], [[D-001-disciplinary-procedure-rule]], [[L-003-constitution-12-4]]
 confidence: medium  # 결론 미확정 영역
 ---
 

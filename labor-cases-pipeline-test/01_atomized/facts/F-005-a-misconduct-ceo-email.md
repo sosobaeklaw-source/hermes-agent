@@ -1,10 +1,10 @@
 ---
-id: F-005-A-misconduct-ceo-email
+id: F-005-a-misconduct-ceo-email
 type: fact
 instance: admin+high
 source: 2022구합61595, 2023누53227
 tags: [비위행위, 사장이메일, 아이디어공모]
-related: [[P-003-plaintiff-A]], [[F-007-B-misconduct-instigation]]
+related: [[P-003-plaintiff-a]], [[F-007-b-misconduct-instigation]]
 note: 2심에서 "2020. 4.경"을 "(2019. 4.경의 오기로 보인다)"로 명시적 정정함.
 confidence: high
 ---

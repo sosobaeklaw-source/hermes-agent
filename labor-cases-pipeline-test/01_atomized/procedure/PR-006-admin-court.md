@@ -4,7 +4,7 @@ type: procedure
 instance: admin
 source: 2022구합61595
 tags: [서울행정법원, 1심, 청구기각]
-related: [[PR-005-central-labor-commission]], [[PR-007-high-court]], [[O-001-admin-judgment]]
+related: [[PR-005-central-labor-commission]], [[PR-007-high-court]], [[O-001-admin-judgment]], [[A-001-plaintiff-counsel-lee]], [[A-003-employer-counsel]]
 confidence: high
 ---
 

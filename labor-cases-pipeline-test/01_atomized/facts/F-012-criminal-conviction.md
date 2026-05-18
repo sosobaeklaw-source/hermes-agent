@@ -4,7 +4,7 @@ type: fact
 instance: high
 source: 2023누53227
 tags: [형사재판, 정보통신망법, 컴퓨터등장애업무방해, 벌금]
-related: [[F-004-A-misconduct-server-access]], [[F-006-A-misconduct-record-tampering]]
+related: [[F-004-a-misconduct-server-access]], [[F-006-a-misconduct-record-tampering]], [[L-004-information-communication-network-act]]
 confidence: high
 ---
 

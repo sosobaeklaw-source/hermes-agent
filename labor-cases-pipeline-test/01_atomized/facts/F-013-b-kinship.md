@@ -1,10 +1,10 @@
 ---
-id: F-013-B-kinship
+id: F-013-b-kinship
 type: fact
 instance: admin
 source: 2022구합61595
 tags: [친인척관계, 이종사촌, 동기맥락]
-related: [[P-004-plaintiff-B]], [[F-008-public-interest-claim]]
+related: [[P-004-plaintiff-b]], [[F-008-public-interest-claim]]
 confidence: high
 ---
 

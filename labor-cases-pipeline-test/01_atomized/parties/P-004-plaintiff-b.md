@@ -1,10 +1,10 @@
 ---
-id: P-004-plaintiff-B
+id: P-004-plaintiff-b
 type: party
 instance: all
 source: 2022구합61595
 tags: [당사자, 원고, 시설관리, 차장, 친인척관계]
-related: [[P-003-plaintiff-A]], [[F-013-B-kinship]]
+related: [[P-003-plaintiff-a]], [[F-013-b-kinship]]
 confidence: high
 ---
 

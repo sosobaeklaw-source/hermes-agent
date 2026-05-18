@@ -4,7 +4,7 @@ type: procedure
 instance: high
 source: 2023누53227
 tags: [서울고등법원, 항소심, 항소기각]
-related: [[PR-006-admin-court]], [[PR-008-supreme-court]], [[O-002-high-judgment]]
+related: [[PR-006-admin-court]], [[PR-008-supreme-court]], [[O-002-high-judgment]], [[A-001-plaintiff-counsel-lee]], [[A-003-employer-counsel]]
 confidence: high
 ---
 
