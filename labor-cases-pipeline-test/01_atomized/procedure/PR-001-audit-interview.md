@@ -4,7 +4,7 @@ type: procedure
 instance: admin+high
 source: 2022구합61595, 2023누53227
 tags: [임의문답, 감사반, 묵비권고지]
-related: [[F-009-lawyer-accompaniment-request]], [[R-001-procedural-defect]], [[I-001-lawyer-accompaniment]]
+related: [[F-009-lawyer-accompaniment-request]], [[R-001-procedural-defect-admin]], [[I-001-lawyer-accompaniment]]
 confidence: high
 ---
 

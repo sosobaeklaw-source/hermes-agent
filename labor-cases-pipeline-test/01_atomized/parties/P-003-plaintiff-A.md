@@ -4,7 +4,7 @@ type: party
 instance: all
 source: 2022구합61595
 tags: [당사자, 원고, 전산담당, 과장]
-related: [[P-004-plaintiff-B]], [[F-002-A-position]], [[F-003-A-misconduct-server-access]]
+related: [[P-004-plaintiff-B]], [[F-004-A-misconduct-server-access]]
 confidence: high
 ---
 

@@ -4,7 +4,7 @@ type: reasoning
 instance: admin
 source: 2022구합61595
 tags: [절차하자, 변호사조력, 1심판단, 문언적해석]
-related: [[I-001-lawyer-accompaniment]], [[D-001-disciplinary-procedure-rule]], [[R-005-stage-distinction]], [[F-009-lawyer-accompaniment-request]]
+related: [[I-001-lawyer-accompaniment]], [[D-001-disciplinary-procedure-rule]], [[R-005-stage-distinction-high]], [[F-009-lawyer-accompaniment-request]]
 confidence: high
 ---
 

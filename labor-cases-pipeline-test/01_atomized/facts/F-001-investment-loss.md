@@ -4,7 +4,7 @@ type: fact
 instance: admin
 source: 2022구합61595
 tags: [배경사실, L사모펀드, 환매중단, 교육부조사]
-related: [[P-002-employer-subsidiary]], [[F-014-mof-audit]]
+related: [[P-002-employer-subsidiary]], [[F-002-mof-audit]]
 confidence: high
 ---
 

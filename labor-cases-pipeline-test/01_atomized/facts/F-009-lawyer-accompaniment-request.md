@@ -4,7 +4,7 @@ type: fact
 instance: admin+high+supreme
 source: 2022구합61595, 2023누53227, 2024두64888
 tags: [핵심사실, 변호인동석요청, 감사반거부]
-related: [[I-001-lawyer-accompaniment]], [[PR-001-audit-interview]], [[R-001-procedural-defect]]
+related: [[I-001-lawyer-accompaniment]], [[PR-001-audit-interview]], [[R-001-procedural-defect-admin]]
 confidence: high
 ---
 

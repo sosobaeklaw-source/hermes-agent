@@ -4,7 +4,7 @@ type: fact
 instance: admin
 source: 2022구합61595
 tags: [절차사실, 진술포기, 인사위원회]
-related: [[PR-002-disciplinary-committee]], [[R-001-procedural-defect]]
+related: [[PR-002-disciplinary-committee]], [[R-001-procedural-defect-admin]]
 confidence: high
 ---
 
