@@ -54,6 +54,36 @@ def _session_entry_name(origin: Dict[str, Any]) -> str:
     return f"{base_name} / {topic_label}"
 
 
+def _log_slack_directory_failure(team_id: str, detail: Any) -> None:
+    response = getattr(detail, "response", detail)
+    error = ""
+    needed = ""
+    if hasattr(response, "get"):
+        error = str(response.get("error", "unknown"))
+        needed = str(response.get("needed", ""))
+    if error == "missing_scope" and "groups:read" in needed:
+        warn_key = f"{team_id}:{needed}"
+        log = logger.warning if warn_key not in _SLACK_DIRECTORY_SCOPE_WARNED else logger.debug
+        _SLACK_DIRECTORY_SCOPE_WARNED.add(warn_key)
+        log(
+            "Channel directory: Slack private-channel listing unavailable for team %s "
+            "(missing groups:read); continuing with known sessions",
+            team_id,
+        )
+        return
+    if error:
+        logger.warning(
+            "Channel directory: users.conversations not ok for team %s: %s",
+            team_id,
+            error,
+        )
+        return
+    logger.warning(
+        "Channel directory: failed to list Slack channels for team %s: %s",
+        team_id, detail,
+    )
+
+
 # ---------------------------------------------------------------------------
 # Build / refresh
 # ---------------------------------------------------------------------------
@@ -173,23 +203,7 @@ async def _build_slack(adapter) -> List[Dict[str, Any]]:
                     cursor=cursor,
                 )
                 if not response.get("ok"):
-                    error = str(response.get("error", "unknown"))
-                    needed = str(response.get("needed", ""))
-                    if error == "missing_scope" and "groups:read" in needed:
-                        warn_key = f"{team_id}:{needed}"
-                        log = logger.warning if warn_key not in _SLACK_DIRECTORY_SCOPE_WARNED else logger.debug
-                        _SLACK_DIRECTORY_SCOPE_WARNED.add(warn_key)
-                        log(
-                            "Channel directory: Slack private-channel listing unavailable for team %s "
-                            "(missing groups:read); continuing with known sessions",
-                            team_id,
-                        )
-                    else:
-                        logger.warning(
-                            "Channel directory: users.conversations not ok for team %s: %s",
-                            team_id,
-                            error,
-                        )
+                    _log_slack_directory_failure(team_id, response)
                     break
                 for ch in response.get("channels", []):
                     cid = ch.get("id")
@@ -206,10 +220,7 @@ async def _build_slack(adapter) -> List[Dict[str, Any]]:
                 if not cursor:
                     break
         except Exception as e:
-            logger.warning(
-                "Channel directory: failed to list Slack channels for team %s: %s",
-                team_id, e,
-            )
+            _log_slack_directory_failure(team_id, e)
             continue
 
     # Merge in DM/group entries discovered from session history.

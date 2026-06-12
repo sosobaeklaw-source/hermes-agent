@@ -363,6 +363,12 @@ def _make_slack_client(pages):
     return client
 
 
+class _FakeSlackApiError(Exception):
+    def __init__(self, response):
+        super().__init__("slack api error")
+        self.response = response
+
+
 class TestBuildSlack:
     """_build_slack actually calls users.conversations on each workspace client."""
 
@@ -489,6 +495,26 @@ class TestBuildSlack:
         second = _make_slack_client([
             {"ok": False, "error": "missing_scope", "needed": "groups:read"},
         ])
+
+        with patch.dict(os.environ, {"HERMES_HOME": str(tmp_path)}), \
+             patch("gateway.channel_directory._SLACK_DIRECTORY_SCOPE_WARNED", set()), \
+             caplog.at_level(logging.WARNING, logger="gateway.channel_directory"):
+            asyncio.run(_build_slack(_make_slack_adapter({"T1": first})))
+            asyncio.run(_build_slack(_make_slack_adapter({"T1": second})))
+
+        warnings = [
+            record.message
+            for record in caplog.records
+            if "missing groups:read" in record.message
+        ]
+        assert len(warnings) == 1
+
+    def test_missing_groups_read_exception_warns_once(self, tmp_path, caplog):
+        response = {"error": "missing_scope", "needed": "groups:read"}
+        first = MagicMock()
+        first.users_conversations = AsyncMock(side_effect=_FakeSlackApiError(response))
+        second = MagicMock()
+        second.users_conversations = AsyncMock(side_effect=_FakeSlackApiError(response))
 
         with patch.dict(os.environ, {"HERMES_HOME": str(tmp_path)}), \
              patch("gateway.channel_directory._SLACK_DIRECTORY_SCOPE_WARNED", set()), \
