@@ -3931,6 +3931,10 @@ class GatewayRunner(GatewayAuthorizationMixin, GatewayKanbanWatchersMixin, Gatew
                     platform_str, chat_id, e,
                 )
 
+        if not active:
+            logger.debug("Skipping home-channel shutdown notifications: no active agents")
+            return
+
         if self._restart_requested and restart_source is not None:
             logger.debug("Skipping home-channel shutdown notifications for in-chat restart")
             return
