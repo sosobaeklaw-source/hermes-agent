@@ -2,6 +2,7 @@
 
 import asyncio
 import json
+import logging
 import os
 from types import SimpleNamespace
 from unittest.mock import AsyncMock, MagicMock, patch
@@ -480,3 +481,24 @@ class TestBuildSlack:
             entries = asyncio.run(_build_slack(_make_slack_adapter({"T1": client})))
 
         assert entries == []
+
+    def test_missing_groups_read_scope_warns_once(self, tmp_path, caplog):
+        first = _make_slack_client([
+            {"ok": False, "error": "missing_scope", "needed": "groups:read"},
+        ])
+        second = _make_slack_client([
+            {"ok": False, "error": "missing_scope", "needed": "groups:read"},
+        ])
+
+        with patch.dict(os.environ, {"HERMES_HOME": str(tmp_path)}), \
+             patch("gateway.channel_directory._SLACK_DIRECTORY_SCOPE_WARNED", set()), \
+             caplog.at_level(logging.WARNING, logger="gateway.channel_directory"):
+            asyncio.run(_build_slack(_make_slack_adapter({"T1": first})))
+            asyncio.run(_build_slack(_make_slack_adapter({"T1": second})))
+
+        warnings = [
+            record.message
+            for record in caplog.records
+            if "missing groups:read" in record.message
+        ]
+        assert len(warnings) == 1

@@ -17,6 +17,7 @@ from utils import atomic_json_write
 logger = logging.getLogger(__name__)
 
 DIRECTORY_PATH = get_hermes_home() / "channel_directory.json"
+_SLACK_DIRECTORY_SCOPE_WARNED: set[str] = set()
 
 
 def _normalize_channel_query(value: str) -> str:
@@ -172,11 +173,23 @@ async def _build_slack(adapter) -> List[Dict[str, Any]]:
                     cursor=cursor,
                 )
                 if not response.get("ok"):
-                    logger.warning(
-                        "Channel directory: users.conversations not ok for team %s: %s",
-                        team_id,
-                        response.get("error", "unknown"),
-                    )
+                    error = str(response.get("error", "unknown"))
+                    needed = str(response.get("needed", ""))
+                    if error == "missing_scope" and "groups:read" in needed:
+                        warn_key = f"{team_id}:{needed}"
+                        log = logger.warning if warn_key not in _SLACK_DIRECTORY_SCOPE_WARNED else logger.debug
+                        _SLACK_DIRECTORY_SCOPE_WARNED.add(warn_key)
+                        log(
+                            "Channel directory: Slack private-channel listing unavailable for team %s "
+                            "(missing groups:read); continuing with known sessions",
+                            team_id,
+                        )
+                    else:
+                        logger.warning(
+                            "Channel directory: users.conversations not ok for team %s: %s",
+                            team_id,
+                            error,
+                        )
                     break
                 for ch in response.get("channels", []):
                     cid = ch.get("id")
