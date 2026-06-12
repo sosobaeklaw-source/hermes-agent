@@ -442,6 +442,7 @@ class TelegramAdapter(BasePlatformAdapter):
         self._pending_text_batch_tasks: Dict[str, asyncio.Task] = {}
         self._polling_error_task: Optional[asyncio.Task] = None
         self._polling_conflict_count: int = 0
+        self._polling_last_conflict_monotonic: Optional[float] = None
         self._polling_network_error_count: int = 0
         self._polling_error_callback_ref = None
         # After sustained reconnect storms the PTB httpx pool can return
@@ -1091,10 +1092,20 @@ class TelegramAdapter(BasePlatformAdapter):
         # nor fatal — messages are silently dropped.  We schedule another
         # retry attempt instead of returning silently, and only escalate to
         # fatal after all retries are exhausted.
+        MAX_CONFLICT_RETRIES = 5
+        CONFLICT_STORM_RESET_SECS = 120
+        loop = asyncio.get_running_loop()
+        now = loop.time()
+        last_conflict = self._polling_last_conflict_monotonic
+        if (
+            last_conflict is not None
+            and now - last_conflict > CONFLICT_STORM_RESET_SECS
+        ):
+            self._polling_conflict_count = 0
+        self._polling_last_conflict_monotonic = now
         self._polling_conflict_count += 1
 
-        MAX_CONFLICT_RETRIES = 5
-        # Delay grows with each attempt: 15s, 25s, 35s, 45s, 55s.
+        # Delay grows with each attempt: 20s, 30s, 40s, 50s, 60s.
         # Telegram server-side getUpdates sessions typically expire within
         # 30s; the increasing back-off ensures we clear that window without
         # hammering the API on fast-restart loops.
@@ -1130,7 +1141,6 @@ class TelegramAdapter(BasePlatformAdapter):
                     "[%s] Telegram polling resumed after conflict retry %d/%d",
                     self.name, self._polling_conflict_count, MAX_CONFLICT_RETRIES,
                 )
-                self._polling_conflict_count = 0  # reset counter on success
                 return
             except Exception as retry_err:
                 logger.warning(
@@ -1151,7 +1161,6 @@ class TelegramAdapter(BasePlatformAdapter):
                     # thread 'MainThread'" on Python 3.10+ when invoked from a
                     # context without an attached loop (which can happen when PTB
                     # dispatches this error callback). Use get_running_loop().
-                    loop = asyncio.get_running_loop()
                     self._polling_error_task = loop.create_task(
                         self._handle_polling_conflict(retry_err)
                     )

@@ -117,15 +117,41 @@ async def test_polling_conflict_retries_before_fatal(monkeypatch):
     conflict = type("Conflict", (Exception,), {})
 
     # First conflict: should retry, NOT be fatal
-    captured["error_callback"](conflict("Conflict: terminated by other getUpdates request"))
-    await asyncio.sleep(0)
-    await asyncio.sleep(0)
-    # Give the scheduled task a chance to run
-    for _ in range(10):
-        await asyncio.sleep(0)
+    await adapter._handle_polling_conflict(
+        conflict("Conflict: terminated by other getUpdates request")
+    )
 
     assert adapter.has_fatal_error is False, "First conflict should not be fatal"
-    assert adapter._polling_conflict_count == 0, "Count should reset after successful retry"
+    assert adapter._polling_conflict_count == 1, "Count should remain until conflicts stay quiet"
+
+
+@pytest.mark.asyncio
+async def test_polling_conflict_counter_survives_immediate_reconflict(monkeypatch):
+    adapter = TelegramAdapter(PlatformConfig(enabled=True, token="***"))
+    fatal_handler = AsyncMock()
+    adapter.set_fatal_error_handler(fatal_handler)
+
+    updater = SimpleNamespace(
+        start_polling=AsyncMock(),
+        stop=AsyncMock(),
+        running=True,
+    )
+    bot = SimpleNamespace(_request=(MagicMock(), MagicMock()))
+    app = SimpleNamespace(bot=bot, updater=updater)
+    adapter._app = app
+    adapter._polling_error_callback_ref = lambda error: None
+
+    monkeypatch.setattr("asyncio.sleep", AsyncMock())
+
+    conflict = type("Conflict", (Exception,), {})
+    for _ in range(6):
+        await adapter._handle_polling_conflict(
+            conflict("Conflict: terminated by other getUpdates request")
+        )
+
+    assert adapter.fatal_error_code == "telegram_polling_conflict"
+    assert adapter.has_fatal_error is True
+    fatal_handler.assert_awaited_once()
 
 
 @pytest.mark.asyncio
