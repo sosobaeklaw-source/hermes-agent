@@ -26,6 +26,7 @@ except ModuleNotFoundError:
 
 import asyncio
 import dataclasses
+import hashlib
 import inspect
 import json
 import logging
@@ -1714,6 +1715,47 @@ from gateway.whatsapp_identity import (
 
 
 logger = logging.getLogger(__name__)
+
+
+_SHUTDOWN_NOTICE_COOLDOWN_SECONDS_DEFAULT = 1800.0
+
+
+def _gateway_shutdown_notice_cooldown_seconds() -> float:
+    raw = os.environ.get("HERMES_GATEWAY_SHUTDOWN_NOTICE_COOLDOWN_SECONDS", "").strip()
+    if not raw:
+        return _SHUTDOWN_NOTICE_COOLDOWN_SECONDS_DEFAULT
+    try:
+        return max(0.0, float(raw))
+    except ValueError:
+        logger.warning(
+            "Invalid HERMES_GATEWAY_SHUTDOWN_NOTICE_COOLDOWN_SECONDS=%r; using %.0fs",
+            raw,
+            _SHUTDOWN_NOTICE_COOLDOWN_SECONDS_DEFAULT,
+        )
+        return _SHUTDOWN_NOTICE_COOLDOWN_SECONDS_DEFAULT
+
+
+def _gateway_shutdown_notice_state_path() -> Path:
+    return _hermes_home / ".gateway_shutdown_notice_dedupe.json"
+
+
+def _gateway_shutdown_notice_key(
+    platform: str,
+    chat_id: str,
+    thread_id: Optional[str],
+    message: str,
+) -> str:
+    payload = json.dumps(
+        {
+            "platform": platform,
+            "chat_id": chat_id,
+            "thread_id": thread_id,
+            "message": message,
+        },
+        sort_keys=True,
+        separators=(",", ":"),
+    )
+    return hashlib.sha256(payload.encode("utf-8")).hexdigest()
 
 
 # Sentinel placed into _running_agents immediately when a session starts
@@ -4516,6 +4558,80 @@ class GatewayRunner(GatewayAuthorizationMixin, GatewayKanbanWatchersMixin, Gatew
             except Exception as e:
                 logger.debug("Failed interrupting agent during shutdown: %s", e)
 
+    def _load_shutdown_notice_state(self) -> tuple[Path, dict[str, float]]:
+        path = _gateway_shutdown_notice_state_path()
+        state: dict[str, float] = {}
+        try:
+            if path.exists():
+                loaded = json.loads(path.read_text(encoding="utf-8"))
+                if isinstance(loaded, dict):
+                    for item_key, item_value in loaded.items():
+                        try:
+                            state[str(item_key)] = float(item_value)
+                        except (TypeError, ValueError):
+                            continue
+        except Exception as e:
+            logger.debug("Failed to read shutdown notice dedupe state %s: %s", path, e)
+        return path, state
+
+    def _shutdown_notice_suppressed(
+        self,
+        platform_str: str,
+        chat_id: str,
+        thread_id: Optional[str],
+        message: str,
+    ) -> bool:
+        cooldown = _gateway_shutdown_notice_cooldown_seconds()
+        if cooldown <= 0:
+            return False
+
+        key = _gateway_shutdown_notice_key(platform_str, chat_id, thread_id, message)
+        now = time.time()
+        _, state = self._load_shutdown_notice_state()
+
+        last_sent = state.get(key)
+        if last_sent is not None and now - last_sent < cooldown:
+            logger.info(
+                "Shutdown notification suppressed for %s:%s%s; sent %.0fs ago",
+                platform_str,
+                chat_id,
+                f":{thread_id}" if thread_id else "",
+                now - last_sent,
+            )
+            return True
+
+        return False
+
+    def _record_shutdown_notice_delivery(
+        self,
+        platform_str: str,
+        chat_id: str,
+        thread_id: Optional[str],
+        message: str,
+    ) -> None:
+        cooldown = _gateway_shutdown_notice_cooldown_seconds()
+        if cooldown <= 0:
+            return
+
+        key = _gateway_shutdown_notice_key(platform_str, chat_id, thread_id, message)
+        now = time.time()
+        path, state = self._load_shutdown_notice_state()
+
+        cutoff = now - max(cooldown * 4, 86400.0)
+        state = {item_key: item_value for item_key, item_value in state.items() if item_value >= cutoff}
+        state[key] = now
+
+        try:
+            path.parent.mkdir(parents=True, exist_ok=True)
+            tmp_path = path.with_suffix(f"{path.suffix}.tmp")
+            tmp_path.write_text(
+                json.dumps(state, sort_keys=True, separators=(",", ":")),
+                encoding="utf-8",
+            )
+            tmp_path.replace(path)
+        except Exception as e:
+            logger.debug("Failed to write shutdown notice dedupe state %s: %s", path, e)
+
     async def _notify_active_sessions_of_shutdown(self) -> None:
         """Send shutdown/restart notifications to active chats and home channels.
 
@@ -4588,6 +4704,11 @@ class GatewayRunner(GatewayAuthorizationMixin, GatewayKanbanWatchersMixin, Gatew
                     )
                     continue
 
+                target_thread_id = str(thread_id) if thread_id else None
+                if self._shutdown_notice_suppressed(platform_str, chat_id, target_thread_id, msg):
+                    notified.add(dedup_key)
+                    continue
+
                 reply_to_message_id = getattr(source, "message_id", None) if source is not None else None
                 if reply_to_message_id is None and restart_source is not None:
                     try:
@@ -4618,6 +4739,7 @@ class GatewayRunner(GatewayAuthorizationMixin, GatewayKanbanWatchersMixin, Gatew
                     )
                     continue
 
+                self._record_shutdown_notice_delivery(platform_str, chat_id, target_thread_id, msg)
                 notified.add(dedup_key)
                 logger.info(
                     "Sent shutdown notification to active chat %s:%s",
@@ -4655,6 +4777,11 @@ class GatewayRunner(GatewayAuthorizationMixin, GatewayKanbanWatchersMixin, Gatew
             if dedup_key in notified:
                 continue
 
+            home_thread_id = str(home.thread_id) if home.thread_id else None
+            if self._shutdown_notice_suppressed(platform.value, str(home.chat_id), home_thread_id, msg):
+                notified.add(dedup_key)
+                continue
+
             try:
                 metadata = self._thread_metadata_for_target(
                     platform,
@@ -4675,6 +4802,7 @@ class GatewayRunner(GatewayAuthorizationMixin, GatewayKanbanWatchersMixin, Gatew
                     )
                     continue
 
+                self._record_shutdown_notice_delivery(platform.value, str(home.chat_id), home_thread_id, msg)
                 notified.add(dedup_key)
                 logger.info(
                     "Sent shutdown notification to home channel %s:%s",

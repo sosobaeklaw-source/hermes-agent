@@ -646,7 +646,8 @@ async def test_send_restart_notification_logs_info_on_sendresult_success(
 
 
 @pytest.mark.asyncio
-async def test_shutdown_notifications_use_cached_live_thread_source_when_origin_missing():
+async def test_shutdown_notifications_use_cached_live_thread_source_when_origin_missing(tmp_path, monkeypatch):
+    monkeypatch.setattr(gateway_run, "_hermes_home", tmp_path)
     runner, adapter = make_restart_runner()
     source = make_restart_source(chat_id="parent-42", chat_type="group", thread_id="topic-7")
     session_key = build_session_key(source)
@@ -666,7 +667,8 @@ async def test_shutdown_notifications_use_cached_live_thread_source_when_origin_
 
 
 @pytest.mark.asyncio
-async def test_restart_shutdown_notification_anchors_telegram_dm_topic():
+async def test_restart_shutdown_notification_anchors_telegram_dm_topic(tmp_path, monkeypatch):
+    monkeypatch.setattr(gateway_run, "_hermes_home", tmp_path)
     runner, adapter = make_restart_runner()
     runner._restart_requested = True
     source = make_restart_source(chat_id="123456", thread_id="20197")
@@ -688,3 +690,108 @@ async def test_restart_shutdown_notification_anchors_telegram_dm_topic():
         "direct_messages_topic_id": "20197",
         "telegram_reply_to_message_id": "462",
     }
+
+
+@pytest.mark.asyncio
+async def test_shutdown_notifications_are_deduped_across_gateway_restarts(tmp_path, monkeypatch):
+    monkeypatch.setattr(gateway_run, "_hermes_home", tmp_path)
+    runner, adapter = make_restart_runner()
+    source = make_restart_source(chat_id="parent-42", chat_type="group", thread_id="topic-7")
+    session_key = build_session_key(source)
+
+    runner._running_agents[session_key] = object()
+    runner.session_store._entries[session_key] = MagicMock(origin=source)
+    adapter.send = AsyncMock(return_value=SendResult(success=True, message_id="first"))
+
+    await runner._notify_active_sessions_of_shutdown()
+
+    second_runner, second_adapter = make_restart_runner()
+    second_runner._running_agents[session_key] = object()
+    second_runner.session_store._entries[session_key] = MagicMock(origin=source)
+    second_adapter.send = AsyncMock(return_value=SendResult(success=True, message_id="second"))
+
+    await second_runner._notify_active_sessions_of_shutdown()
+
+    adapter.send.assert_awaited_once()
+    second_adapter.send.assert_not_awaited()
+
+
+@pytest.mark.asyncio
+async def test_shutdown_notification_send_failure_does_not_mark_dedupe(tmp_path, monkeypatch):
+    monkeypatch.setattr(gateway_run, "_hermes_home", tmp_path)
+    runner, adapter = make_restart_runner()
+    source = make_restart_source(chat_id="parent-42", chat_type="group", thread_id="topic-7")
+    session_key = build_session_key(source)
+
+    runner._running_agents[session_key] = object()
+    runner.session_store._entries[session_key] = MagicMock(origin=source)
+    adapter.send = AsyncMock(return_value=SendResult(success=False, error="network down"))
+
+    await runner._notify_active_sessions_of_shutdown()
+
+    second_runner, second_adapter = make_restart_runner()
+    second_runner._running_agents[session_key] = object()
+    second_runner.session_store._entries[session_key] = MagicMock(origin=source)
+    second_adapter.send = AsyncMock(return_value=SendResult(success=True, message_id="second"))
+
+    await second_runner._notify_active_sessions_of_shutdown()
+
+    adapter.send.assert_awaited_once()
+    second_adapter.send.assert_awaited_once()
+
+
+@pytest.mark.asyncio
+async def test_shutdown_home_channel_notifications_are_deduped_across_gateway_restarts(
+    tmp_path,
+    monkeypatch,
+):
+    monkeypatch.setattr(gateway_run, "_hermes_home", tmp_path)
+    runner, adapter = make_restart_runner()
+    runner.config.platforms[Platform.TELEGRAM].home_channel = HomeChannel(
+        platform=Platform.TELEGRAM,
+        chat_id="home-42",
+        name="Ops Home",
+    )
+    adapter.send = AsyncMock(return_value=SendResult(success=True, message_id="first"))
+
+    await runner._notify_active_sessions_of_shutdown()
+
+    second_runner, second_adapter = make_restart_runner()
+    second_runner.config.platforms[Platform.TELEGRAM].home_channel = HomeChannel(
+        platform=Platform.TELEGRAM,
+        chat_id="home-42",
+        name="Ops Home",
+    )
+    second_adapter.send = AsyncMock(return_value=SendResult(success=True, message_id="second"))
+
+    await second_runner._notify_active_sessions_of_shutdown()
+
+    adapter.send.assert_awaited_once()
+    second_adapter.send.assert_not_awaited()
+
+
+@pytest.mark.asyncio
+async def test_shutdown_home_channel_send_failure_does_not_mark_dedupe(tmp_path, monkeypatch):
+    monkeypatch.setattr(gateway_run, "_hermes_home", tmp_path)
+    runner, adapter = make_restart_runner()
+    runner.config.platforms[Platform.TELEGRAM].home_channel = HomeChannel(
+        platform=Platform.TELEGRAM,
+        chat_id="home-42",
+        name="Ops Home",
+    )
+    adapter.send = AsyncMock(return_value=SendResult(success=False, error="network down"))
+
+    await runner._notify_active_sessions_of_shutdown()
+
+    second_runner, second_adapter = make_restart_runner()
+    second_runner.config.platforms[Platform.TELEGRAM].home_channel = HomeChannel(
+        platform=Platform.TELEGRAM,
+        chat_id="home-42",
+        name="Ops Home",
+    )
+    second_adapter.send = AsyncMock(return_value=SendResult(success=True, message_id="second"))
+
+    await second_runner._notify_active_sessions_of_shutdown()
+
+    adapter.send.assert_awaited_once()
+    second_adapter.send.assert_awaited_once()
